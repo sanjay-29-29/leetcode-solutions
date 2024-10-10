@@ -1,24 +1,25 @@
 class Solution {
+    HashMap<String, Integer> map;
+    
     public int uniquePaths(int m, int n) {
-        HashMap<String, Integer> map = new HashMap<>();
-        return uniquePaths(m,n,map);     
+        map = new HashMap<>();
+        return recursion(m,n);
     }
 
-    private int uniquePaths(int m, int n, HashMap<String, Integer> map) {
-        // Check if we have already computed the result
-        if (map.containsKey(m + "," + n)) {
-            return map.get(m + "," + n);
+    public int recursion(int m, int n){
+        String key = m + "," + n;
+        if(map.containsKey(key)){
+            return map.get(key);
         }
-
-        // Base cases
-        if (m == 1 || n == 1) {
-            return 1; // If either dimension is 1, there's only one path
+        if(m==1 && n == 1){
+            return 1;
         }
-
-        // Recursive calculation with memoization
-        int paths = uniquePaths(m - 1, n, map) + uniquePaths(m, n - 1, map);
-        map.put(m + "," + n, paths); // Store the result in the map
-
-        return paths; // Return the computed number of unique paths
+        if(m==0 || n == 0){
+            return 0;
+        }else{
+            int val = recursion(m-1, n) + recursion(m, n-1);
+            map.put(key,val);
+            return val;
+        }
     }
 }
