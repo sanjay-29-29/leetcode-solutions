@@ -1,18 +1,23 @@
 class Solution {
-    public int minCostClimbingStairs(int[] cost) {
-        HashMap<Integer, Integer> map = new HashMap<>();
-        return Math.min(recursion(cost,0, map),recursion(cost,1,map));
+    HashMap<Integer,Integer> map;
+    
+    Solution(){
+        map = new HashMap<>();
     }
 
-    private int recursion(int[] cost, int i, HashMap<Integer,Integer> map){
-        if(map.containsKey(i)){
-            return map.get(i);
-        }
-        if(i > cost.length - 1){
+    public int minCostClimbingStairs(int[] cost) {
+      return Math.min(recursion(cost,0),recursion(cost,1));
+    }
+
+    public int recursion(int[] cost, int index){
+        if(index > cost.length - 1){
             return 0;
         }
-        int sum =  cost[i] + Math.min(recursion(cost, i+1, map), recursion(cost, i+2, map));   
-        map.put(i,sum);
-        return sum;
+        if(map.containsKey(index)){
+            return map.get(index);
+        }
+        int val = cost[index] + Math.min(recursion(cost, index+1),recursion(cost, index+2));
+        map.put(index, val);
+        return val;
     }
 }
