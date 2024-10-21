@@ -15,16 +15,17 @@
  */
 class Solution {
     public int goodNodes(TreeNode root) {
-        return dfs(root, root.val);
+        return 1 + recursion(root.right, root.val) + recursion(root.left, root.val);
     }
 
-    private int dfs(TreeNode root, int x){
+    private int recursion(TreeNode root, int rootVal){
         if(root == null){
             return 0;
         }
-        if(x <= root.val){
-            return 1 + dfs(root.left, root.val) + dfs(root.right, root.val);
+        if(root.val >= rootVal){
+            return 1 + recursion(root.right, root.val) + recursion(root.left, root.val);
+        }else{
+            return 0 + recursion(root.right, rootVal) + recursion(root.left, rootVal);
         }
-        return dfs(root.left, x) + dfs(root.right, x);
     }
 }
