@@ -1,25 +1,33 @@
 class Solution {
-    int row, col;
-    HashMap<String, Integer> map;
-    
+    int m, n;
+    HashMap<String, Integer> map = new HashMap<>();
+
     public int uniquePaths(int m, int n) {
-        map = new HashMap<>();
-        return recursion(m, n);
+        this.m = m;
+        this.n = n;
+
+        return bfs(0, 0);
     }
-    
-    private int recursion(int i, int j){
-        String key = i + "," + j;
+
+    public int bfs(int i, int j){
+        boolean exp1 = (0 <= i && i < m);
+        boolean exp2 = (0 <= j && j < n);
+        String key = i + " " + j;
+
+        if(!exp1 || !exp2){
+            return 0;
+        }
+
+        if(i == m - 1 && j == n - 1){
+            return 1;
+        }
+
         if(map.containsKey(key)){
             return map.get(key);
         }
-        if(i<0 || j<0){
-            return 0;
-        }
-        if(i==1 && j==1){
-            return 1;
-        }
-        int val = recursion(i-1,j) + recursion(i,j-1);
-        map.put(key,val);
+        
+        int val =  bfs(i + 1, j) + bfs(i, j + 1);
+        map.put(key, val);
         return val;
     }
 }
