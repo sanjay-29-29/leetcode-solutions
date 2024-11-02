@@ -1,27 +1,32 @@
 class Solution {
     public boolean canVisitAllRooms(List<List<Integer>> rooms) {
+        Set<Integer> visited = new HashSet<>();
         Stack<Integer> stack = new Stack<>();
-        HashSet<Integer> set = new HashSet<>();
 
-        for(int i=0;i<rooms.get(0).size();i++){
-            stack.push(0);
+        List<Integer> roomZero = rooms.get(0);
+        visited.add(0);
+        for(int i = 0; i < roomZero.size(); i++){
+            stack.add(roomZero.get(i));
         }
 
         while(!stack.isEmpty()){
-            int current = stack.pop();
-            if(set.contains(current)){
+            int currentIndex = stack.pop();
+            
+            if(visited.contains(currentIndex)){
                 continue;
             }
-            set.add(current);
-            System.out.println(current);
-            for(int i=0;i<rooms.get(current).size();i++){
-                int val = rooms.get(current).get(i);
-                stack.push(val);
+            
+            visited.add(currentIndex);
+            
+            List<Integer> currentRoom = rooms.get(currentIndex);
+
+            for(int i = 0; i < currentRoom.size(); i++){
+                stack.add(currentRoom.get(i));
             }
         }
-        if(set.size() == rooms.size()){
+
+        if(visited.size() == rooms.size())
             return true;
-        }
         return false;
     }
 }
