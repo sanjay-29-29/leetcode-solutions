@@ -1,18 +1,21 @@
 class Solution {
     public boolean isSubsequence(String s, String t) {
-        int slow = 0;
-        int fast = 0;
-        String str = "";
-        while(slow<s.length() && fast<t.length()){
-            if(t.charAt(fast) == s.charAt(slow)){
-                slow++;
-                fast++;
-            }else{
-                fast++;
-            }
-        }
-        if(slow == s.length()){
+        int left = 0;
+        int right = 0;
+        if(s.equals("")){
             return true;
+        }
+        while(left < s.length() && right < t.length()){
+            if(s.charAt(left) == t.charAt(right)){
+                left++;
+                right++;
+            }
+            else{
+                right++;
+            }
+            if(left == s.length()){
+                return true;
+            }
         }
         return false;
     }
