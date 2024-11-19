@@ -1,24 +1,22 @@
 class Solution {
-    HashMap<Integer, Integer> map;
+    int[] nums;
+    Map<Integer, Integer> map = new HashMap<>();
+
     public int rob(int[] nums) {
-        map = new HashMap<>();
-        return recursion(nums, 0);
+        this.nums = nums;
+        return robHouse(0);
     }
-    private int recursion(int[] nums, int index){
-        if(map.containsKey(index)){
-            return map.get(index);
-        }
-        if(index > nums.length - 1){
+
+    private int robHouse(int index){
+        if(index >= nums.length){
             return 0;
         }
-        int max = 0;
-        for(int i=index;i<nums.length;i++){
-            int curr = nums[i] + recursion(nums, i+2);
-            if(curr>max){
-                max = curr;
-            }
-        }
-        map.put(index,max);
-        return max;
+        if(map.containsKey(index)){
+            return map.get(index);
+        }    
+
+        int val = Math.max(nums[index] + robHouse(index + 2), robHouse(index + 1));
+        map.put(index, val);
+        return val;
     }
 }
