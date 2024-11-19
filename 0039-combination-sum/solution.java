@@ -1,24 +1,28 @@
 class Solution {
-    List<List<Integer>> list;
-    
+    Set<List<Integer>> returnList = new HashSet<>();
+    int[] candidates;
+
     public List<List<Integer>> combinationSum(int[] candidates, int target) {
-        list = new ArrayList<List<Integer>>();
-        List<Integer> l = new ArrayList<Integer>();
-        recursion(candidates, target, l, 0);
-        return list;
+        this.candidates = candidates;
+        recursion(new ArrayList<>(), 0, target);
+        return new ArrayList<>(returnList);
     }
-    
-    private void recursion(int[] arr, int target, List<Integer> l, int start){
+
+    public void recursion(List<Integer> list, int index, int target){
         if(target == 0){
-            list.add(l);
+            returnList.add(list);
         }
-        for(int i=start; i<arr.length;i++){
-            if(target-arr[i]>=0){
-                List<Integer> l1 = new ArrayList<Integer>();
-                l1.addAll(l);
-                l1.add(arr[i]);
-                recursion(arr,target-arr[i],l1,i);
-            }
+        if(index >= candidates.length){
+            return;
         }
+
+        if(target - candidates[index] >= 0){
+            List<Integer> newList = new ArrayList<>(list);
+            newList.add(candidates[index]);
+            recursion(newList, index + 1, target - candidates[index]);
+            recursion(newList, index, target - candidates[index]);
+
+        }
+        recursion(list, index + 1, target);
     }
 }
