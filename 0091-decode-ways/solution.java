@@ -1,33 +1,33 @@
 class Solution {
-    HashMap<String,Integer> map;
+    Map<String, Integer> map = new HashMap<>();
+
     public int numDecodings(String s) {
-        map = new HashMap<>();
         return recursion(s);
     }
 
     public int recursion(String s){
-        if(map.containsKey(s)){
-            return map.get(s);
-        }
         if(s.length() == 0){
             return 1;
         }
+
         if(s.charAt(0) == '0'){
             return 0;
         }
-        
-        int val;
+        if(map.containsKey(s)){
+            return map.get(s);
+        }    
 
-        if(s.length() >= 2 ){
-            int num = Integer.parseInt(s.substring(0,2));
-            if(num>=10 && num<=26){
-                val = recursion(s.substring(2,s.length())) + recursion(s.substring(1,s.length()));
-            map.put(s,val);
-            return val;
+        if(s.length() >= 2){
+            int n = ((s.charAt(0) - '0') * 10) + (s.charAt(1) - '0');
+            if(n <= 26){
+                int val = recursion(s.substring(1, s.length())) + recursion(s.substring(2, s.length()));
+                map.put(s, val);
+                return val;
             }
         }
-        val = recursion(s.substring(1,s.length()));
-        map.put(s,val);
+        
+        int val = recursion(s.substring(1, s.length()));
+        map.put(s, val);
         return val;
     }
 }
