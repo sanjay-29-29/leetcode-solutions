@@ -1,60 +1,59 @@
-class TrieNode {
-    TrieNode[] child;
-    boolean wordEnd;
-
-    public TrieNode() {
-        wordEnd = false;
-        child = new TrieNode[26];
-    }
-}
-
 class Trie {
-    TrieNode root;
+    class Node {
+        boolean wordEnd;
+        Node[] node = new Node[26];
+    }
+
+    Node root;
 
     public Trie() {
-        root = new TrieNode();
+        root = new Node();
     }
 
     public void insert(String word) {
-        TrieNode curr = root;
+        Node curr = root;
 
-        for (int i = 0; i < word.length(); i++) {
-            if (curr.child[word.charAt(i) - 'a'] == null) {
-                TrieNode newNode = new TrieNode();
-                curr.child[word.charAt(i) - 'a'] = newNode;
+        for(int i = 0; i < word.length(); i++){
+            int c = word.charAt(i) - 'a';
+            if(curr.node[c] == null){
+                curr.node[c] = new Node();
+                curr = curr.node[c];
+            }else{
+                curr = curr.node[c];
             }
-            curr = curr.child[word.charAt(i) - 'a'];
         }
 
         curr.wordEnd = true;
     }
 
     public boolean search(String word) {
-        TrieNode curr = root;
+        Node curr = root;
 
-        for (int i = 0; i < word.length(); i++) {
-            if (curr.child[word.charAt(i) - 'a'] != null) {
-                curr = curr.child[word.charAt(i) - 'a'];
-            }else{
+        for(int i = 0; i < word.length(); i++){
+            int c = word.charAt(i) - 'a';
+            if(curr.node[c] == null){
                 return false;
             }
+            curr = curr.node[c];
+        }           
+        if(curr.wordEnd){
+            return true;
         }
-
-        return curr.wordEnd;
+        return false;
     }
 
-    public boolean startsWith(String word) {
-        TrieNode curr = root;
+    public boolean startsWith(String prefix) {
+        Node curr = root;
 
-        for (int i = 0; i < word.length(); i++) {
-            if (curr.child[word.charAt(i) - 'a'] != null) {
-                curr = curr.child[word.charAt(i) - 'a'];
-            }else{
+        for(int i = 0; i < prefix.length(); i++){
+            int c = prefix.charAt(i) - 'a';
+            if(curr.node[c] == null){
                 return false;
             }
-        }
-
+            curr = curr.node[c];
+        }           
         return true;
+    
     }
 }
 
