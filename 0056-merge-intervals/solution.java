@@ -1,39 +1,25 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, new java.util.Comparator<int[]>() {
-            public int compare(int[] a, int[] b) {
-                return Integer.compare(a[0], b[0]);
-            }
+        Arrays.sort(intervals, (a, b) -> {
+            return Integer.compare(a[0], b[0]);
         });
 
-        int prevVal = 0;
-        int curVal = 0;
+        int prev = 0;
+        int curr = prev + 1;
 
-
-        while (curVal < intervals.length) {
-            if (curVal == 0) {
-                curVal++; 
-                continue;
-            }
-            // System.out.println(intervals[prevVal][0] + " " + intervals[prevVal][1]);
-            if(intervals[prevVal][1] >= intervals[curVal][0]){
-                if(intervals[curVal][1] < intervals[prevVal][1]){
-                    curVal++;
-                    continue;
-                }
-                intervals[prevVal][1] = intervals[curVal][1];
-                curVal++;
+        while(curr < intervals.length){
+            if(intervals[prev][1] >= intervals[curr][0]){
+                intervals[prev][1] = Math.max(intervals[curr][1], intervals[prev][1]);
+                curr++;
             }else{
-               prevVal++; 
-               intervals[prevVal][0] = intervals[curVal][0];
-               intervals[prevVal][1] = intervals[curVal][1];
-               curVal++;
+                prev++;
+                intervals[prev][0] = intervals[curr][0];
+                intervals[prev][1] = intervals[curr][1];
+                curr++;
             }
         }
-
-        // System.out.println(prevVal);
-        
-        return Arrays.copyOf(intervals, prevVal + 1);
-
+        int[][] newArr = new int[prev + 1][2];
+        System.arraycopy(intervals, 0, newArr, 0, prev + 1);
+        return newArr;
     }
 }
