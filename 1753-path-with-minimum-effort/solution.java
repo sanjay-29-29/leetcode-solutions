@@ -1,56 +1,45 @@
 class Solution {
-    class Node implements Comparable<Node> {
-        int x;
-        int y;
-        int weight;
 
-        Node(int _x, int _y, int _weight) {
-            x = _x;
-            y = _y;
-            weight = _weight;
-        }
+    class Cell {
+        int i;
+        int j;
+        int maxDiff;
 
-        @Override
-        public int compareTo(Node n) {
-            return Integer.compare(this.weight, n.weight);
+        Cell(int _i, int _j, int _maxDiff) {
+            i = _i;
+            j = _j;
+            maxDiff = _maxDiff;
         }
     }
 
     public int minimumEffortPath(int[][] heights) {
-        PriorityQueue<Node> minHeap = new PriorityQueue<>();
-
-        int[][] directions = { { 1, 0 }, { -1, 0 }, { 0, 1 }, { 0, -1 } };
+        Queue<Cell> heap = new PriorityQueue<>((a, b) -> Integer.compare(a.maxDiff, b.maxDiff));
         boolean[][] visited = new boolean[heights.length][heights[0].length];
 
-        minHeap.add(new Node(0, 0, 0));
+        heap.add(new Cell(0, 0, 0));
 
-        while (!minHeap.isEmpty()) {
-            Node currNode = minHeap.remove();
+        while (!heap.isEmpty()) {
+            Cell curr = heap.poll();
 
-            if (currNode.x == heights.length - 1 && currNode.y == heights[0].length - 1) {
-                return currNode.weight;
+            if (curr.i == heights.length - 1 && curr.j == heights[0].length - 1) {
+                return curr.maxDiff;
             }
 
-            if (visited[currNode.x][currNode.y]) {
+            if(visited[curr.i][curr.j]){
                 continue;
             }
 
-            visited[currNode.x][currNode.y] = true;
+            int[][] travelArr = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
 
-            for (int[] dir : directions) {
-                int newX = currNode.x + dir[0];
-                int newY = currNode.y + dir[1];
-
-                boolean exp1 = (0 <= newX && newX < heights.length);
-                boolean exp2 = (0 <= newY && newY < heights[0].length);
-
-                if (!exp1 || !exp2) {
+            for (int[] arr : travelArr) {
+                int uX = curr.i + arr[0];
+                int uY = curr.j + arr[1];
+                if (!(uX >= 0 && uX < heights.length) || !(uY >= 0 && uY < heights[0].length)) {
                     continue;
                 }
-
-                int effort = Math.abs(heights[currNode.x][currNode.y] - heights[newX][newY]);
-                int maxEffort = Math.max(currNode.weight, effort);
-                minHeap.add(new Node(newX, newY, maxEffort));
+                int uDistance = Math.max(curr.maxDiff, Math.abs(heights[curr.i][curr.j] - heights[uX][uY]));
+                visited[curr.i][curr.j] = true;
+                heap.add(new Cell(uX, uY, uDistance));
             }
         }
 
