@@ -1,27 +1,24 @@
 class Solution {
-    public boolean isAnagram(String s, String t) {
-        Map<Character, Integer> map1 = new HashMap<>();
-        Map<Character, Integer> map2 = new HashMap<>();
-         
+    private void count(String s, int[] arr){
         for(int i = 0; i < s.length(); i++){
-            if(!map1.containsKey(s.charAt(i))){
-                map1.put(s.charAt(i), 1);
-            }else{
-                map1.put(s.charAt(i), map1.get(s.charAt(i)) + 1);
+            arr[s.charAt(i) - 'a']++;
+        }
+    }
+
+    public boolean isAnagram(String s, String t) {
+        int[] cArr1 = new int[26];
+        int[] cArr2 = new int[26];
+
+        count(s, cArr1);
+        count(t, cArr2);
+
+        for(int i = 0; i < 26; i++){
+            // System.out.println(cArr1[i] + " " + cArr2[i]);
+            if(cArr1[i] != cArr2[i]){
+                return false;
             }
         }
 
-        for(int i = 0; i < t.length(); i++){
-            if(!map2.containsKey(t.charAt(i))){
-                map2.put(t.charAt(i), 1);
-            }else{
-                map2.put(t.charAt(i), map2.get(t.charAt(i)) + 1);
-            }
-        }
-
-        if(map1.equals(map2)){
-            return true;
-        }
-        return false;
+        return true;
     }
 }
