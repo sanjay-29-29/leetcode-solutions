@@ -1,23 +1,26 @@
 class Solution {
     public int[] sortArrayByParityII(int[] nums) {
-        int slow = 0;
-        int fast = 0;
-        
-        while(slow<nums.length && fast<nums.length){
-            if(!(nums[slow]%2 != 0 && (slow+1)%2 != 0)){
-                slow++;
+        int oddPointer = 0;
+        int evenPointer = 0;
+
+        while (oddPointer < nums.length && evenPointer < nums.length) {
+            if (!(evenPointer % 2 == 0 && nums[evenPointer] % 2 != 0)) {
+                evenPointer++;
                 continue;
             }
-            if(!(nums[fast]%2 == 0 && (fast+1)%2 == 0)){
-                fast++;
+
+            if (!(oddPointer % 2 != 0 && nums[oddPointer] % 2 == 0)) {
+                oddPointer++;
                 continue;
             }
-            int temp = nums[slow];
-            nums[slow] = nums[fast];
-            nums[fast] = temp;
-            slow++;
-            fast++;
+
+            int temp = nums[oddPointer];
+            nums[oddPointer] = nums[evenPointer];
+            nums[evenPointer] = temp;
+            evenPointer++;
+            oddPointer++;
         }
+
         return nums;
     }
 }
