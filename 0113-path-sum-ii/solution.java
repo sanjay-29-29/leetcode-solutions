@@ -14,29 +14,33 @@
  * }
  */
 class Solution {
-    List<List<Integer>> l;
-
     public List<List<Integer>> pathSum(TreeNode root, int targetSum) {
-        l = new ArrayList<List<Integer>>();
-        List<Integer> list = new ArrayList<Integer>();
-        recursion(root, targetSum, list);
-        return l;
+    List<List<Integer>> res = new ArrayList<>(); 
+    calcSum(root, targetSum, new ArrayList<>(), res);
+    return res;
     }
-    
-    private void recursion(TreeNode root, int targetSum, List<Integer> list){
-        List<Integer> newL = new ArrayList<Integer>();
-        if(root!= null && targetSum-root.val == 0 && root.left == null && root.right == null){
-            newL.addAll(list);
-            newL.add(root.val);
-            l.add(newL);
+
+    private void calcSum(TreeNode root, int targetSum, List<Integer> list, List<List<Integer>> res){
+        if(root == null) return;
+
+        if(root.left == null && root.right == null && targetSum - root.val == 0){
+            list.add(root.val);
+            res.add(list);
             return;
         }
-        if(root == null){
-            return;
-        }
-        newL.addAll(list);
-        newL.add(root.val);
-        recursion(root.left, targetSum-root.val, newL);
-        recursion(root.right, targetSum-root.val, newL);
+        
+        list.add(root.val);
+        //System.out.println(list);
+
+        calcSum(root.left, 
+            targetSum - root.val,
+            new ArrayList<>(list),
+            res
+        );
+        calcSum(root.right, 
+            targetSum - root.val,
+            new ArrayList<>(list),
+            res
+        );
     }
 }
