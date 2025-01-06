@@ -1,47 +1,54 @@
 class Solution {
     public List<Integer> spiralOrder(int[][] matrix) {
-        int i = 0;
-        int j = 0;
-        int count = 0;
-        List<Integer> list = new ArrayList<>();
+        List<Integer> res = new ArrayList<>();
         Set<String> set = new HashSet<>();
 
-        while(count < matrix.length * matrix[0].length){
-            System.out.println(count);
-            while(j < matrix[0].length && i < matrix.length && !set.contains(i + " " + j)){
-                list.add(matrix[i][j]);
-                set.add(i + " " + j);
+        int count = 0;
+        int row = 0;
+        int col = 0;
+
+        while (count != (matrix[0].length * matrix.length)) {
+            while (col < matrix[0].length && !set.contains(row + " " + col)) {
+                res.add(matrix[row][col]);
+                set.add(row + " " + col);
+                // System.out.println(row + " " + col);
                 count++;
-                j++;
+                col++;
             }
-            j = j - 1;
-            i = i + 1;
-            while(j < matrix[0].length && i < matrix.length && !set.contains(i + " " + j)){
-                list.add(matrix[i][j]);
-                set.add(i + " " + j);
+            col--;
+            row++;
+
+            while (row < matrix.length && !set.contains(row + " " + col)) {
+                res.add(matrix[row][col]);
+                set.add(row + " " + col);
+                // System.out.println(row + " " + col);
                 count++;
-                i++;
+                row++;
             }
-            i = i - 1;
-            j = j - 1;
-            while(j >= 0 && i < matrix.length  && !set.contains(i + " " + j)){
-                list.add(matrix[i][j]);
-                set.add(i + " " + j);
+            row--;
+            col--;
+
+            while (col >= 0 && !set.contains(row + " " + col)) {
+                res.add(matrix[row][col]);
+                set.add(row + " " + col);
+                // System.out.println(row + " " + col);
                 count++;
-                j--;
+                col--;
             }
-            j = j + 1;
-            i = i - 1;
-            while(j < matrix[0].length && i >= 0  && !set.contains(i + " " + j)){
-                list.add(matrix[i][j]);
-                set.add(i + " " + j);
+            col++;
+            row--;
+
+            while (row >= 0 && !set.contains(row + " " + col)) {
+                res.add(matrix[row][col]);
+                set.add(row + " " + col);
+                // System.out.println(row + " " + col);
                 count++;
-                i--;
+                row--;
             }
-            i = i + 1;
-            j = j + 1;
+            col++;
+            row++;
         }
 
-        return list;
+        return res;
     }
 }
