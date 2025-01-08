@@ -1,46 +1,47 @@
 class Solution {
-    List<String> list = new ArrayList<>();
-
     public List<String> restoreIpAddresses(String s) {
-        int n = 0;
-        backTrack(new StringBuilder(s), 0, 0);
-        return list;
+        List<String> res = new ArrayList<>();
+        backTrack(new StringBuilder(s), 0, 0, res);
+        return res;
     }
 
-    public void backTrack(StringBuilder s, int index, int count) {
-        if (count == 3 && index < s.length()) {
-            if(checkSegment(s.substring(index, s.length())))
-                list.add(s.toString());
+    private void backTrack(StringBuilder s, int index, int dotCount, List<String> res){
+        if(dotCount == 3){
+            //System.out.println(s);
+            if(isValid(s.substring(index, s.length()))){
+                res.add(s.toString());
+            }
             return;
         }
 
-        int n = 0;
-        
-        for (int i = index; i < s.length(); i++) {
-            n = n * 10 + (s.charAt(i) - '0');
-
-            if(s.charAt(index) == '0' && index - i > 0 ){
-                return;
-            }
-
-            if (checkSegment(s.substring(index, i + 1))) {
-                s.insert(i + 1, ".");
-                backTrack(s, i + 2, count + 1);
-                s.deleteCharAt(i + 1);
+        for(int i = index; i < s.length() && i <= index + 3; i++){
+            if(isValid(s.substring(index, i))){
+                s.insert(i, '.');
+                backTrack(s, i + 1, dotCount + 1, res);
+                s.deleteCharAt(i);
             }
         }
     }
 
-    public boolean checkSegment(String s) {
-        int n = 0;
-        if(s.charAt(0) == '0' && s.length() > 1)
+
+    private boolean isValid(String s){
+        if(s.length() == 0){
             return false;
-        for(int i = 0; i < s.length(); i++){
-            n = n * 10 + (s.charAt(i) - '0');
-            if(n > 255){
-                return false;
-            }
         }
-        return true;
+
+        if(s.charAt(0) == '0'){
+            if(s.length() == 1) return true;
+            return false;
+       }
+
+        if(s.length() > 3){
+            return false;
+        }
+
+        if(s.length() >= 0 && s.length() <= 3 && Integer.valueOf(s) >= 0 && Integer.valueOf(s) <= 255){
+            return true;
+        }
+
+        return false;
     }
 }
