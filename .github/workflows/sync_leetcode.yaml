@@ -8,13 +8,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment: secrets
     steps:
       - name: Sync
         uses: joshcai/leetcode-sync@v1.7
         with:
-          github-token: ${{ secrets.TOKEN }}
-          leetcode-csrf-token: ${{ secrets.LEETCODE_CSRF_TOKEN }}
-          leetcode-session: ${{ secrets.LEETCODE_SESSION }}
+          github-token: ${{ github.TOKEN }}
+          leetcode-csrf-token: ${{ secrets.CSRF_TOKEN }}
+          leetcode-session: ${{ secrets.SESSION_TOKEN }}
           verbose: true
           commit-header: "[LeetCode Sync]"
