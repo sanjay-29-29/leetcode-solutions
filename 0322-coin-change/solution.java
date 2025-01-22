@@ -1,43 +1,49 @@
 class Solution {
-    int[] coins;
-    int minCoins;
-    boolean flag = false;
-    Map<String, Integer> map = new HashMap<>();
-
-    public int coinChange(int[] coins, int amount) {
-        this.coins = coins;
-        int val = recursion(amount, 0);
-        if (flag)
-            return val;
-        return -1;
-    }
-
-    private int recursion(int amount, int index) {
-        String key = index + " " + amount;
-
-        if (amount == 0) {
-            flag = true;
-            return 0;
-        }
-
-        if (index >= coins.length) {
+    private int recursion(int[] coins, int amount, int index, int[][] dp){
+        if(index > coins.length - 1){
             return 99999;
         }
 
-        if (map.containsKey(key)) {
-            return map.get(key);
+        if(amount == 0){
+            return 0;
         }
 
-        if (amount - coins[index] >= 0) {
-            int val = Math.min(1 + recursion(amount - coins[index], index + 1),
-                    Math.min(1 + recursion(amount - coins[index], index), recursion(amount, index + 1)));
-            map.put(key, val);
+        String key = amount + " " + index;
+
+        if(dp[index][amount] != -1){
+            return dp[index][amount];
+        }
+
+        if(amount - coins[index] >= 0){
+            int val = Math.min(
+                1 + recursion(coins, amount - coins[index], index, dp),
+                Math.min(
+                    1 + recursion(coins, amount - coins[index], index + 1, dp),
+                    recursion(coins, amount, index + 1, dp)
+                )
+            );
+            dp[index][amount] = val;
             return val;
         }
 
-        int val = recursion(amount, index + 1);
-        map.put(key, val);
+        int val = recursion(coins, amount, index + 1, dp);
+        dp[index][amount] = val;
         return val;
+    }
 
+    public int coinChange(int[] coins, int amount) {
+        int[][] dp = new int[coins.length][amount + 1];
+
+        for(int i = 0; i < coins.length; i++){
+            Arrays.fill(dp[i], -1);
+        }
+
+        int val = recursion(coins, amount, 0, dp);
+
+        if(val == 99999){
+            return -1;
+        }
+
+        return val;
     }
 }
