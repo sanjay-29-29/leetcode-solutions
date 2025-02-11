@@ -1,42 +1,38 @@
 class Solution {
-    public String gcdOfStrings(String str1, String str2) {
-        int length;
-        String word = "";
-        if(str1.length()>str2.length()){
-            length = gcd(str1.length(),str2.length());
-        }else{
-            length = gcd(str2.length(),str1.length());
-        }
-        for(int i=0;i<length;i++){
-            if(str1.charAt(i)!=str2.charAt(i)){
-                return "";
+    public String gcdOfStrings(String str1, String str2) { 
+        boolean canMake = false;
+        String validPrefix = "";
+        String prefix = "";
+        int i = 0;
+
+        while(i < str1.length() && i < str2.length()){
+            if(str1.charAt(i) == str2.charAt(i)){
+                prefix += str1.charAt(i);
+                if(canMakeString(prefix, str1) && canMakeString(prefix, str2)){
+                    validPrefix = prefix;
+                    canMake = true;
+                }
             }else{
-                word = word + str1.charAt(i);
+                return "";
             }
+            i++;
         }
 
-        for(int i=0;i<str1.length();i+=word.length()){
-            for(int j=0;j<word.length();j++){
-                if(str1.charAt(i+j) != word.charAt(j)){
-                    return "";
-                }
-            }
+        if(canMake){
+            return validPrefix;
         }
-        for(int i=0;i<str2.length();i+=word.length()){
-            for(int j=0;j<word.length();j++){
-                if(str2.charAt(i+j) != word.charAt(j)){
-                    return "";
-                }
-            }
-        }
-        return word;
+
+        return "";
     }
 
-    int gcd(int a, int b){
-        if(b==0){
-            return a;
-        }else{
-            return gcd(b, a % b);
+    private boolean canMakeString(String prefix, String str){
+        String temp = "";
+        while(temp.length() <= str.length()){
+            if(str.equals(temp)){
+                return true;
+            }
+            temp += prefix;
         }
+        return false;
     }
 }
