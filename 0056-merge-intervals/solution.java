@@ -1,15 +1,17 @@
 class Solution {
     public int[][] merge(int[][] intervals) {
-        Arrays.sort(intervals, (a, b) -> {
-            return Integer.compare(a[0], b[0]);
+        Arrays.sort(intervals, new Comparator<int[]> () {
+            public int compare(int[] a, int[] b){
+                return Integer.compare(a[0], b[0]);
+            }
         });
 
         int prev = 0;
-        int curr = prev + 1;
+        int curr = 1;
 
-        while(curr < intervals.length){
+        while(prev < intervals.length && curr < intervals.length){
             if(intervals[prev][1] >= intervals[curr][0]){
-                intervals[prev][1] = Math.max(intervals[curr][1], intervals[prev][1]);
+                intervals[prev][1] = Math.max(intervals[prev][1], intervals[curr][1]);
                 curr++;
             }else{
                 prev++;
@@ -18,8 +20,13 @@ class Solution {
                 curr++;
             }
         }
-        int[][] newArr = new int[prev + 1][2];
-        System.arraycopy(intervals, 0, newArr, 0, prev + 1);
-        return newArr;
+
+        int[][] mergedArr = new int[prev + 1][2];
+        for(int i = 0; i < mergedArr.length; i++){
+            mergedArr[i][0] = intervals[i][0];
+            mergedArr[i][1] = intervals[i][1];
+        }
+
+        return mergedArr;
     }
 }
