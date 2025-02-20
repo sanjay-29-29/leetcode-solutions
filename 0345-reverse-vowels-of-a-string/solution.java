@@ -1,46 +1,36 @@
 class Solution {
     public String reverseVowels(String str) {
         StringBuilder s = new StringBuilder(str);
+        Set<Character> set = new HashSet<>();
+
+        set.add('a');
+        set.add('e');
+        set.add('i');
+        set.add('o');
+        set.add('u');
+        set.add('A');
+        set.add('E');
+        set.add('I');
+        set.add('O');
+        set.add('U');
+
         int left = 0;
-        int right = s.length() -1;
-        boolean left_flag = false;
-        boolean right_flag = false;
-
-        while(left<=right){
-            if(!left_flag && ( 
-                Character.toLowerCase(s.charAt(left))!='a' && 
-                Character.toLowerCase(s.charAt(left))!='e' && 
-                Character.toLowerCase(s.charAt(left))!='i' && 
-                Character.toLowerCase(s.charAt(left))!='o' && 
-                Character.toLowerCase(s.charAt(left))!='u')){
-                System.out.println("left");
+        int right = s.length() - 1;
+        
+        while(left < right){
+            if(!set.contains(s.charAt(left))){
                 left++;
+            }else if(!set.contains(s.charAt(right))){
+                right --;
             }else{
-                left_flag = true;
-            }
-
-            if(!right_flag && (
-                Character.toLowerCase(s.charAt(right))!='a' && 
-                Character.toLowerCase(s.charAt(right))!='e' &&
-                Character.toLowerCase(s.charAt(right))!='i' && 
-                Character.toLowerCase(s.charAt(right))!='o' && 
-                Character.toLowerCase(s.charAt(right))!='u')){
-                right--;
-                System.out.println("right");
-            }else{
-                right_flag = true;
-            }
-            if(right_flag && left_flag){
-                System.out.println("swap");
-                right_flag = false;
-                left_flag = false;
                 char temp = s.charAt(left);
-                s.setCharAt(left,s.charAt(right));
-                s.setCharAt(right,temp);
+                s.setCharAt(left, s.charAt(right));
+                s.setCharAt(right, temp);
                 left++;
                 right--;
             }
         }
+
         return s.toString();
     }
 }
