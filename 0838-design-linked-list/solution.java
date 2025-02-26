@@ -1,138 +1,136 @@
-class Node {
+class Node{
     Node prev;
     Node next;
-
     int val;
 
-    Node(Node _prev, Node _next, int _val) {
-        prev = _prev;
-        next = _next;
+    Node(Node _left, Node _right, int _val){
+        prev = _left;
+        next = _right;
         val = _val;
     }
 }
 
 class MyLinkedList {
-    Node head;
-    Node tail;
-    int size = 0;
+    Node head, tail;
+    int size;
 
     public MyLinkedList() {
+        
     }
-
+    
     public int get(int index) {
-        if (head == null) {
+        if(head == null){
+            return -1;
+        }
+
+        if(index < 0 || index >= size){
             return -1;
         }
 
         int i = 0;
-        Node temp = head;
+        Node node = head;
 
-        while (temp != null) {
-            if (i == index) {
-                return temp.val;
+        while(node != null){
+            if(i == index){
+                return node.val;
             }
+            node = node.next;
             i++;
-            temp = temp.next;
         }
 
         return -1;
     }
-
+    
     public void addAtHead(int val) {
         size++;
-        Node node = new Node(null, null, val);
-        if (head == null && tail == null) {
-            head = tail = node;
+        if(head == null && tail == null){
+            head = tail = new Node(null, null, val);
             return;
         }
-        node.next = head;
-        head.prev = node;
-        head = node;
-    }
 
+        Node temp = new Node(null, head, val);
+        head.prev = temp;
+        head = temp;
+    }
+    
     public void addAtTail(int val) {
         size++;
-        Node node = new Node(null, null, val);
-        if (head == null && tail == null) {
-            head = tail = node;
+        if(head == null && tail == null){
+            head = tail = new Node(null, null, val);
             return;
         }
-        node.prev = tail;
-        tail.next = node;
-        tail = node;
+        Node temp = new Node(tail, null, val);
+        tail.next = temp;
+        tail = temp;
     }
-
+    
     public void addAtIndex(int index, int val) {
-        if (index < 0 || index > size) {
-            return;
+        if(index < 0 || index > size){
+           return; 
         }
 
-        if (index == 0) {
+        if(index == 0){
             addAtHead(val);
             return;
         }
-
-        if (index == size) {
+        if(index == size){
             addAtTail(val);
             return;
         }
 
-        int i = 0;
-        Node node = new Node(null, null, val);
-        Node temp = head;
         size++;
+        int i = 0;
+        Node prev = null, curr = head;
 
-        while (temp != null) {
-            if (i == index) {
-                node.prev = temp.prev;
-                node.next = temp;
-                temp.prev.next = node;
-                temp.prev = node;
+        while(curr != null){
+            if(i == index){
+                Node newNode = new Node(prev, curr, val);
+                prev.next = newNode;
+                curr.prev = newNode;
                 break;
             }
+            prev = curr;
+            curr = curr.next;
             i++;
-            temp = temp.next;
         }
+
     }
-
+    
     public void deleteAtIndex(int index) {
-        if (index < 0 || index >= size || head == null) {
-            return;
+        if(index < 0 || index >= size){
+        //    System.out.println(index);
+           return; 
         }
 
-        if (index == 0) {
-            size--;
+        if(index == 0){
             head = head.next;
-            if(head != null){
-                head.prev = null;
-            }else{
+            if(head == null){
                 tail = null;
             }
+            size--;
             return;
         }
 
-
-        if (index == size - 1) {
-            size--;
+        if(index == size - 1){
             tail = tail.prev;
-            if(tail != null){
-                tail.next = null;
-            }else{
+            if(tail == null){
                 head = null;
             }
+            size--;
             return;
         }
 
         int i = 0;
-        Node temp = head;
-        while (temp != null) {
-            if (i == index) {
-                temp.prev.next = temp.next;
-                temp.next.prev = temp.prev;
+        Node prev = null, curr = head;
+
+        while(curr != null){
+            if(index == i){
+                prev.next = curr.next;
                 break;
             }
             i++;
-            temp = temp.next;
+            prev = curr;
+            curr = curr.next;
         }
         size--;
     }
