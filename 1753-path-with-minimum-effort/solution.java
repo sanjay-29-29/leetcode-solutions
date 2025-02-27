@@ -1,45 +1,42 @@
-class Solution {
+class Node implements Comparable<Node>{
+    int x, y, val;
 
-    class Cell {
-        int i;
-        int j;
-        int maxDiff;
-
-        Cell(int _i, int _j, int _maxDiff) {
-            i = _i;
-            j = _j;
-            maxDiff = _maxDiff;
-        }
+    Node(int _x, int _y, int _val){
+        x = _x;
+        y = _y;
+        val = _val;
     }
 
+    public int compareTo(Node node){
+        return Integer.compare(this.val, node.val);
+    }
+}
+
+class Solution {
     public int minimumEffortPath(int[][] heights) {
-        Queue<Cell> heap = new PriorityQueue<>((a, b) -> Integer.compare(a.maxDiff, b.maxDiff));
+        Queue<Node> queue = new PriorityQueue<>();
         boolean[][] visited = new boolean[heights.length][heights[0].length];
+        int[][] dir = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}}; 
 
-        heap.add(new Cell(0, 0, 0));
 
-        while (!heap.isEmpty()) {
-            Cell curr = heap.poll();
-
-            if (curr.i == heights.length - 1 && curr.j == heights[0].length - 1) {
-                return curr.maxDiff;
+        queue.offer(new Node(0, 0, 0));
+        
+        while(!queue.isEmpty()){
+            Node curr = queue.poll();
+            if(curr.x == heights.length - 1 && curr.y == heights[0].length - 1){
+                return curr.val;
             }
-
-            if(visited[curr.i][curr.j]){
+            if(visited[curr.x][curr.y] == true){
                 continue;
             }
-
-            int[][] travelArr = { { -1, 0 }, { 1, 0 }, { 0, 1 }, { 0, -1 } };
-
-            for (int[] arr : travelArr) {
-                int uX = curr.i + arr[0];
-                int uY = curr.j + arr[1];
-                if (!(uX >= 0 && uX < heights.length) || !(uY >= 0 && uY < heights[0].length)) {
+            visited[curr.x][curr.y] = true;
+            for(int i = 0; i < dir.length; i++){
+                int newX = curr.x + dir[i][0];
+                int newY = curr.y + dir[i][1];
+                if(newX < 0 || newX >= heights.length || newY < 0 || newY >= heights[0].length){
                     continue;
                 }
-                int uDistance = Math.max(curr.maxDiff, Math.abs(heights[curr.i][curr.j] - heights[uX][uY]));
-                visited[curr.i][curr.j] = true;
-                heap.add(new Cell(uX, uY, uDistance));
+                queue.offer(new Node(newX, newY, Math.max(curr.val, Math.abs(heights[curr.x][curr.y] - heights[newX][newY]))));
             }
         }
 
