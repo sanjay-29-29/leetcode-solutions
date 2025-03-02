@@ -1,23 +1,37 @@
 class Solution {
-    List<List<Integer>> list = new ArrayList<>();
-
-    public List<List<Integer>> permute(int[] nums) {
-        fun(nums, 0, new ArrayList<>());
-        return list;
+    private List<Integer> convertToList(int[] nums) {
+        List<Integer> res = new ArrayList<>();
+        for (int i = 0; i < nums.length; i++) {
+            res.add(nums[i]);
+        }
+        return res;
     }
 
-    private void fun(int[] nums, int index, List<Integer> l){
-        if(index >= nums.length){
-            list.add(l);
+    public List<List<Integer>> permute(int[] nums) {
+        List<List<Integer>> res = new ArrayList<>();
+        backTrack(nums, 0, res);
+        return res;
+    }
+
+    private void backTrack(int[] nums, int index, List<List<Integer>> res) {
+        if (index >= nums.length) {
+            res.add(convertToList(nums));
+            return;
         }
-        for(int i=index; i<nums.length; i++){
-            int temp = nums[index];
-            nums[index] = nums[i];
-            nums[i] = temp;
-            List<Integer> l2 = new ArrayList<>(l);
-            int[] arr2 = nums.clone();
-            l2.add(nums[index]);
-            fun(arr2, index + 1, l2);
+
+        for (int i = index; i < nums.length; i++) {
+            swap(nums, index, i);
+            backTrack(nums, index + 1, res);
+            swap(nums, index, i);
         }
+    }
+
+    private void swap(int[] arr, int i, int j) {
+        if (i == j) {
+            return;
+        }
+        arr[i] = arr[i] ^ arr[j];
+        arr[j] = arr[i] ^ arr[j];
+        arr[i] = arr[i] ^ arr[j];
     }
 }
