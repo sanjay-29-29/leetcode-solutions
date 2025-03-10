@@ -1,41 +1,41 @@
 class MinStack {
-    class Element {
-        int val;
-        int prevMin;
+    class Element{
+        int min, ele;
 
-        Element(int _val, int _prevMin) {
-            val = _val;
-            prevMin = _prevMin;
+        Element(int _min, int _ele){
+            min = _min;
+            ele = _ele;
         }
     }
 
-    Stack<Element> stack;
-    int min = Integer.MAX_VALUE;
+    Stack<Element> stack = new Stack<>();
 
     public MinStack() {
-        stack = new Stack<>();
-    }
 
+    }
+    
     public void push(int val) {
-        stack.add(new Element(val, min));
-        if (val < min) {
-            min = val;
+        if(stack.isEmpty()){ 
+            stack.push(new Element(val, val));
+            return;
         }
+        int min = stack.peek().min;
+        min = Math.min(min, val);
+        stack.push(new Element(min, val));
     }
-
+    
     public void pop() {
-        Element val = stack.pop();
-        if(val.val == min){
-            min = val.prevMin;
+        if(!stack.isEmpty()){
+            stack.pop();
         }
     }
-
+    
     public int top() {
-        return stack.peek().val;
+       return stack.peek().ele; 
     }
-
+    
     public int getMin() {
-        return min;
+        return stack.peek().min;
     }
 }
 
