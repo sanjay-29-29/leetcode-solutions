@@ -1,33 +1,28 @@
 class Solution {
     public long repairCars(int[] ranks, int cars) {
-        int max = ranks[0];
-
-        for (int i = 1; i < ranks.length; i++) {
-            max = Math.max(max, ranks[i]);
-        }
-
-        long right = 9223372036854775807l;
-        long left = 1;
+        long left = 0, right = Long.MAX_VALUE;
 
         while (left < right) {
             long mid = (left + right) / 2;
-            long numberOfCars = 0;
-            //System.out.println(mid);
-
-            for (int i = 0; i < ranks.length; i++) {
-                numberOfCars += Math.floor(Math.sqrt(mid / ranks[i]));
-                if(numberOfCars >=  cars){
-                    break;
-                }
-            }
-            
-            if(numberOfCars >= cars){
+            if (canRepair(ranks, cars, mid)) {
                 right = mid;
-            }else{
+            } else {
                 left = mid + 1;
             }
         }
 
         return left;
+    }
+
+    private boolean canRepair(int[] ranks, int cars, long time) {
+        int repairCount = 0;
+        for (int i = 0; i < ranks.length; i++) {
+            int carCount = (int) Math.sqrt(time / ranks[i]);
+            repairCount += carCount;
+            if (repairCount >= cars) {
+                return true;
+            }
+        }
+        return false;
     }
 }
