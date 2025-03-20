@@ -1,7 +1,18 @@
 class Solution {
-    public boolean isPowerOfTwo(int n) {
-        if(n < 1)
+    public boolean isPowerOfTwo(int n) { 
+        if(n < 0){
             return false;
-        return (n & n - 1)  == 0;    
+        }
+        int count = 0;
+        for(int i = 0; i < 31; i++){
+            count += n & 1;
+            n = n >> 1;
+        }
+
+        if(count == 1){
+            return true;
+        }
+
+        return false;
     }
 }
