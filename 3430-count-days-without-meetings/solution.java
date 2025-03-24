@@ -1,19 +1,19 @@
 class Solution {
     public int countDays(int days, int[][] meetings) {
-        Arrays.sort(meetings, new Comparator<int[]>() {
-            public int compare(int[] a1, int[] a2) {
-                return Integer.compare(a1[0], a2[0]);
-            }
-        });
-
         int prev = 0;
         int curr = 1;
 
-        while (prev < meetings.length && curr < meetings.length) {
-            if (meetings[prev][1] >= meetings[curr][0]) {
-                meetings[prev][1] = Math.max(meetings[curr][1], meetings[prev][1]);
+        Arrays.sort(meetings, new Comparator<int[]>(){
+            public int compare(int[] a, int[] b){
+                return Integer.compare(a[0], b[0]);
+            }
+        });
+
+        while(curr < meetings.length && prev < meetings.length){
+            if(meetings[prev][1] >= meetings[curr][0]){
+                meetings[prev][1] = Math.max(meetings[prev][1], meetings[curr][1]);
                 curr++;
-            } else {
+            }else{
                 prev++;
                 meetings[prev][0] = meetings[curr][0];
                 meetings[prev][1] = meetings[curr][1];
@@ -21,13 +21,11 @@ class Solution {
             }
         }
 
-        int diff = 0;
-
-        for (int i = 0; i <= prev; i++) {
-            //System.out.println(meetings[i][0] + " " + meetings[i][1]);
-            diff += meetings[i][1] - meetings[i][0] + 1;
+        int meetingDays = 0;
+        for(int i = 0; i <= prev; i++){
+            meetingDays += meetings[i][1] - meetings[i][0] + 1;
         }
 
-        return days - diff;
+        return days - meetingDays;
     }
 }
