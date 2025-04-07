@@ -1,59 +1,45 @@
 class Trie {
     class Node {
-        boolean wordEnd;
         Node[] node = new Node[26];
+        boolean isEnd = false;
     }
 
-    Node root;
-
-    public Trie() {
-        root = new Node();
-    }
+    Node head = new Node();
 
     public void insert(String word) {
-        Node curr = root;
-
-        for(int i = 0; i < word.length(); i++){
-            int c = word.charAt(i) - 'a';
-            if(curr.node[c] == null){
-                curr.node[c] = new Node();
-                curr = curr.node[c];
-            }else{
-                curr = curr.node[c];
+        Node temp = head;
+        for (int i = 0; i < word.length(); i++) {
+            char s = word.charAt(i);
+            if (temp.node[s - 'a'] == null) {
+                temp.node[s - 'a'] = new Node();
             }
+            temp = temp.node[s - 'a'];
         }
-
-        curr.wordEnd = true;
+        temp.isEnd = true;
     }
 
     public boolean search(String word) {
-        Node curr = root;
-
-        for(int i = 0; i < word.length(); i++){
-            int c = word.charAt(i) - 'a';
-            if(curr.node[c] == null){
+        Node temp = head;
+        for (int i = 0; i < word.length(); i++) {
+            char s = word.charAt(i);
+            if (temp.node[s - 'a'] == null) {
                 return false;
             }
-            curr = curr.node[c];
-        }           
-        if(curr.wordEnd){
-            return true;
+            temp = temp.node[s - 'a'];
         }
-        return false;
+        return temp.isEnd;
     }
 
     public boolean startsWith(String prefix) {
-        Node curr = root;
-
-        for(int i = 0; i < prefix.length(); i++){
-            int c = prefix.charAt(i) - 'a';
-            if(curr.node[c] == null){
+        Node temp = head;
+        for (int i = 0; i < prefix.length(); i++) {
+            char s = prefix.charAt(i);
+            if (temp.node[s - 'a'] == null) {
                 return false;
             }
-            curr = curr.node[c];
-        }           
+            temp = temp.node[s - 'a'];
+        }
         return true;
-    
     }
 }
 
