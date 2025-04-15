@@ -1,77 +1,71 @@
 class Solution {
     public int calculate(String s) {
-        return calc(s);
-    }
-
-    public int calc(String s) {
         Stack<Character> stack = new Stack<>();
 
-        for (int i = 0; i < s.length(); i++) {
-            if (s.charAt(i) == ')') {
+        for (char c : s.toCharArray()) {
+            if (c == ')') {
                 StringBuilder str = new StringBuilder();
-                char c = stack.pop();
-                while (c != '(') {
-                    str.append(c);
-                    c = stack.pop();
-                }
-                str.reverse();
-                // System.out.println(str);
-                String val = evaluate(str.toString());
-                int temp = 0; 
-                if(!stack.isEmpty()) {
-                    c = stack.peek();
-                    if(c == '-' && val.charAt(0) == '-') {
-                        stack.pop();
-                        stack.push('+');
-                        temp = 1;
-                    }
-                    if(c == '+' && val.charAt(0) == '+') {
-                        stack.push('+');
-                        temp = 1;
-                    }
+
+                while (!stack.isEmpty()) {
+                    char ele = stack.pop();
+                    if (ele == '(')
+                        break;
+                    str.append(ele);
                 }
 
-                for (int j = temp; j < val.length(); j++) {
-                    stack.push(val.charAt(j));
+                str.reverse();
+                char[] value = calc(str);
+
+                if (!stack.isEmpty() && value[0] == '-' && stack.pop() == '-') {
+                    stack.push('+');
+                    for (int i = 1; i < value.length; i++)
+                        stack.push(value[i]);
+                } else {
+                    for (int i = 0; i < value.length; i++)
+                        stack.push(value[i]);
                 }
-            } else if(s.charAt(i) != ' '){
-                stack.push(s.charAt(i));
+            }
+            else if (c != ' ') {
+                stack.push(c);
             }
         }
-        // System.out.println(stack);
-        StringBuilder s1 = new StringBuilder();
-        for(char c : stack) {
-            s1.append(c);
+
+        StringBuilder str = new StringBuilder();
+        for(char i : stack) {
+            str.append(i);
         }
-        return Integer.valueOf(
-            evaluate(s1.toString())
-        );
+        char[] res = calc(str);
+        str.delete(0, str.length());
+        for(char c : res) {
+            str.append(c);
+        }
+        return Integer.valueOf(str.toString());
     }
 
-    private String evaluate(String s) {
-        int res = 0, val = 0;
+    private char[] calc(StringBuilder s) {
         Stack<Integer> stack = new Stack<>();
+        int res = 0;
         char sign = '+';
 
         for (int i = 0; i < s.length(); i++) {
             char c = s.charAt(i);
             if (Character.isDigit(c)) {
-                res = res * 10 + (c - '0');
-            } 
-            else if (c != ' ') {
+                res = res * 10 + c - '0';
+            } else if (c != ' ') {
                 doOperation(stack, sign, res);
-                res = 0;
                 sign = c;
+                res = 0;
             }
         }
 
         doOperation(stack, sign, res);
+        int val = 0;
 
         for (int i : stack) {
             val += i;
         }
-        // System.out.println(val);
-        return String.valueOf(val);
+
+        return String.valueOf(val).toCharArray();
     }
 
     private void doOperation(Stack<Integer> stack, char sign, int val) {
@@ -90,4 +84,5 @@ class Solution {
                 break;
         }
     }
+
 }
