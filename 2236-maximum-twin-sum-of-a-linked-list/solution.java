@@ -10,26 +10,28 @@
  */
 class Solution {
     public int pairSum(ListNode head) {
-        List<ListNode> list = new ArrayList<>();
-        ListNode temp = head;
+        Stack<ListNode> stack = new Stack<>();
+        int size = 0;
+        ListNode curr = head;
 
-        while(temp != null){
-            list.add(temp);
-            temp = temp.next;
+        for(int i = 0; curr != null; i++) {
+            size++;
+            stack.push(curr); 
+            curr = curr.next;
         }
 
-        int n = list.size();
+
+        int max = 0;
         int i = 0;
-        int maxSum = 0;
+        curr = head;
 
-        while(i <= n / 2){
-            ListNode list1 = list.get(i);
-            ListNode list2 = list.get(n - i - 1);
-
-            maxSum = Math.max(list1.val + list2.val, maxSum);
+        while(i < size / 2) {
+            int sum = curr.val + stack.pop().val;
+            max = Math.max(max, sum);
+            curr = curr.next;
             i++;
         }
 
-        return maxSum;
+        return max;
     }
 }
