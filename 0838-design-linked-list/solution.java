@@ -1,129 +1,104 @@
 class MyLinkedList {
-    class ListNode {
-        ListNode prev, next;
+ 
+    class Node {
         int val;
+        Node next;
 
-        ListNode(ListNode prev, ListNode next, int val) {
-            this.prev = prev;
-            this.next = next;
+        Node (int val, Node next) {
             this.val = val;
+            this.next = next;
         }
     }
 
-    int size = 0;
-    ListNode head = null, tail = null;
+    Node head; 
+    int size;
 
     public MyLinkedList() {
+        
     }
-
+    
     public int get(int index) {
-        int i = 0;
-        ListNode temp = head;
-
-        while (temp != null) {
-            if (i == index) {
-                return temp.val;
+        Node curr = head;
+        for(int i = 0; curr != null; i++) {
+            if(i == index) {
+                return curr.val;
             }
-            i++;
-            temp = temp.next;
+            curr = curr.next;
         }
-
         return -1;
     }
-
+    
     public void addAtHead(int val) {
+        Node newNode = new Node(val, head);
         size++;
-        ListNode node = new ListNode(null, head, val);
-        if (head == null) {
-            head = tail = node;
+        if(head == null) {
+            head = newNode;
             return;
         }
-        head.prev = node;
-        head = node;
+        newNode.next = head;
+        head = newNode;
     }
 
-    public void addAtTail(int val) {
+    public void addAtTail(int val) { 
+        Node newNode = new Node(val, null);
         size++;
-        ListNode node = new ListNode(tail, null, val);
-        if (tail == null) {
-            head = tail = node;
+        if(head == null) {
+            head = newNode;
             return;
         }
-        tail.next = node;
-        tail = node;
+        Node curr = head;
+        while(curr.next != null) {
+            curr = curr.next;
+        }
+        curr.next = newNode;
     }
-
+    
     public void addAtIndex(int index, int val) {
-        if (index == 0) {
+        if(index <= 0) {
             addAtHead(val);
             return;
         }
-
-        if (index == size) {
+        if(index == size) {
             addAtTail(val);
             return;
         }
 
-        ListNode curr = head;
-        int i = 0;
+        Node curr = head, prev = null;
+        Node newNode = new Node(val, null);
+        size++;
 
-        while (curr != null) {
-            if (index == i) {
-                size++;
-                ListNode node = new ListNode(curr.prev, curr, val);
-                if (curr.prev != null) {
-                    curr.prev.next = node;
-                }
-                curr.prev = node;
-                return;
+        for(int i = 0; curr != null; i++) {
+            if(i == index) {
+                prev.next = newNode;
+                newNode.next = curr;          
+                return; 
             }
+            prev = curr;
             curr = curr.next;
-            i++;
         }
     }
-
+    
     public void deleteAtIndex(int index) {
-        if (head == null) {
+        if(index >= size) {
             return;
         }
 
-        if (index == 0) {
-            head = head.next;
-            size--;
-            if (head == null) {
-                head = tail = null;
-                return;
-            }
-            head.prev = null;
+        size--; 
+
+        if(index == 0) {
+            if(head != null)
+                head = head.next;    
             return;
         }
 
-        if (index == size - 1) {
-            tail = tail.prev;
-            size--;
-            if (tail == null) {
-                tail = head = null;
+        Node curr = head, prev = null;
+
+        for(int i = 0; curr != null; i++) {
+            if(i == index) {
+                prev.next = curr.next;
                 return;
             }
-            tail.next = null;
-            return;
-        }
-
-        ListNode curr = head;
-        int i = 0;
-
-        while (curr != null) {
-            if (i == index) {
-                if (curr.prev != null) {
-                    curr.prev.next = curr.next;
-                }
-                if (curr.next != null) {
-                    curr.next.prev = curr.prev;
-                }
-                size--;
-                return;
-            }
-            i++;
+            prev = curr;
             curr = curr.next;
         }
     }
