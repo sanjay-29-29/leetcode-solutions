@@ -1,32 +1,36 @@
-class Solution {
-    class Element{
-        int ele;
-        int idx;
+class Pair<K, V> {
+    K key;
+    V value;
 
-        Element(int _ele, int _idx){
-            ele = _ele;
-            idx = _idx;
-        }
+    Pair(K key, V value) {
+        this.key = key;
+        this.value = value;
     }
 
-    public int[] dailyTemperatures(int[] temperatures) {
-        Stack<Element> stack = new Stack<>();
-        int[] res = new int[temperatures.length];
+    public String toString() {
+        return key + " " + value;
+    }
+}
+
+class Solution {
+    public int[] dailyTemperatures(int[] temp) {
+        Stack<Integer> stack = new Stack<>();
+        int max = 0;
+        int[] res = new int[temp.length];
         int i = 0;
 
-        while(i < temperatures.length){
-            if(stack.isEmpty()){
-                stack.push(new Element(temperatures[i], i));
+        while (i < temp.length) {
+            if (stack.isEmpty()) {
+                stack.push(i);
+                i++;
             }
-            else if(stack.peek().ele < temperatures[i]){
-                Element e = stack.pop();
-                res[e.idx] = i - e.idx;
-                continue;
+            else { 
+                while(!stack.isEmpty() && temp[stack.peek()] < temp[i]) {
+                    int ele = stack.pop();
+                    res[ele] = i - ele; 
+                }
+                stack.push(i++);
             }
-            else{
-                stack.push(new Element(temperatures[i], i));
-            }
-            i++;
         }
 
         return res;
