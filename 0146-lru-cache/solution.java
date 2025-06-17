@@ -1,109 +1,91 @@
-class DLL {
-    DLL next;
-    DLL prev;
-    int key;
-    int val;
-
-    DLL(DLL _prev, DLL _next, int _key, int _val) {
-        next = _next;
-        prev = _prev;
-        val = _val;
-        key = _key;
-    }
-}
-
 class LRUCache {
-    int capacity, currCapacity;
-    DLL head, tail;
+    class Node {
+        int key, val;
+        Node next, prev;
 
-    Map<Integer, DLL> map = new HashMap<>();
-
-    public LRUCache(int _capacity) {
-        capacity = _capacity;
+        Node(int key, int val, Node next, Node prev) {
+            this.key = key;
+            this.val = val;
+            this.next = next;
+            this.prev = prev;
+        }
     }
 
+    Map<Integer, Node> map = new HashMap<>();
+    int maxCapacity, size;
+    Node head = null, tail = null; 
+
+    public LRUCache(int capacity) {
+       maxCapacity = capacity; 
+    }
+    
     public int get(int key) {
-        //traverse();
-        DLL dll = map.get(key);
-        if (dll == null) {
+        Node n = map.get(key);    
+        if(n == null) {
             return -1;
         }
-        if (dll == head) {
-            return dll.val;
-        }
-        removeNode(dll);
-        makeHead(dll);
-        return dll.val;
+        makeHead(n);
+        return n.val;
     }
-
+    
     public void put(int key, int value) {
-        if (map.containsKey(key)) {
-            DLL dll = map.get(key);
-            dll.val = value;
-            if (dll != head) {
-                removeNode(dll);
-                makeHead(dll);
-            }
+        //key already exists
+        Node n = map.get(key);
+        if(n != null) {
+            n.val = value;
+            makeHead(n);
             return;
         }
 
-        if (head == null && tail == null) {
-            head = tail = new DLL(null, null, key, value);
-            map.put(key, head);
-            currCapacity++;
-            return;
+        if(size == maxCapacity) {
+            removeLast();
+            size--;
         }
-
-        if (currCapacity == capacity) {
-            DLL dll = new DLL(null, null, key, value);
-            map.remove(tail.key);
-            removeNode(tail);
-            map.put(key, dll);
-            makeHead(dll);
-            return;
-        }
-
-        currCapacity++;
-        DLL dll = new DLL(null, null, key, value);
-        map.put(key, dll);
-        makeHead(dll);
-        return;
+        
+        n = new Node(key, value, null, null);
+        map.put(key, n);
+        makeHead(n);
+        size++;
     }
 
-    private void removeNode(DLL node) {
-        if(node == head){
-            head = head.next;
+    public void makeHead(Node n) {
+        if(n == null || head == n) {
+            return;
         }
-        if(node == tail){
+        if(head == null || tail == null) {
+            head = tail = n;
+            return;
+        }
+        if(n == tail) {
             tail = tail.prev;
         }
-        if (node.next != null) {
-            node.next.prev = node.prev;
+        if(n.next != null) {
+            n.next.prev = n.prev;
         }
-        if (node.prev != null) {
-            node.prev.next = node.next;
+        if(n.prev != null) {
+            n.prev.next = n.next;
         }
+        n.prev = null;
+        n.next = head;
+        head.prev = n;
+        head = n;
     }
 
-    private void makeHead(DLL node) {
-        node.next = head;
-        node.prev = null;
-        if (head != null) {
-            head.prev = node;
+    public void removeLast() {
+        if(head == null || tail == null) {
+            return;
         }
-        head = node;
-        if (tail == null) {
-            tail = head;
-        }
-    }
 
-    private void traverse() {
-        DLL temp = head;
-        while (temp != null) {
-            System.out.println(temp.val);
-            temp = temp.next;
+        map.remove(tail.key);
+        // System.out.println(tail.val); 
+        tail = tail.prev;
+
+        if(tail == null) {
+            head = null;
+            return;
         }
-        System.out.println("END");
+
+        tail.next = null;
     }
 }
 
