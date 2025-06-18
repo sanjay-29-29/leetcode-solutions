@@ -4,17 +4,20 @@
  * @return {Function}
  */
 var debounce = function (fn, t) {
-    var isExecuting = false;
-    var timeout = null;
+    let timeOut = null;
     return function (...args) {
-        if (isExecuting) {
-            clearTimeout(timeout);
-        } 
-        isExecuting = true;
-        timeout = setTimeout(() => {
-            fn(...args);
-            isExecuting = false;
-        }, t);
+        if (!timeOut) {
+            timeOut = setTimeout(() => {
+                fn(...args);
+                timeOut = null;
+            }, t);
+        } else {
+            clearTimeout(timeOut);
+            timeOut = setTimeout(() => {
+                fn(...args);
+                timeOut = null;
+            }, t);
+        }
     }
 };
 
