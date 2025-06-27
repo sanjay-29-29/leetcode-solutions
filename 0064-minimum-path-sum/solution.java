@@ -1,32 +1,27 @@
 class Solution {
-    int row;
-    int col;
-    
+    int[][] dp;
     public int minPathSum(int[][] grid) {
-        HashMap<String, Integer> map = new HashMap<>();
-        row = grid.length;
-        col = grid[0].length;
-        
-        return minPathSumFunc(grid,0,0,map);
+        dp = new int[grid.length][grid[0].length];
+        for(int[] i : dp) {
+            Arrays.fill(i, -1);
+        }
+        return recurse(grid, 0, 0);
     }
 
-    private int minPathSumFunc(int[][] grid, int n, int m, HashMap<String,Integer> map){
-        String key = m + "," + n;
-
-        if(map.containsKey(key)){
-            return map.get(key);
-        }
-
-        if(n >= row || m >= col){
+    private int recurse(int[][] grid, int i, int j) {
+        int m = grid.length;
+        int n = grid[0].length;
+        if(i >= m || i < 0 || j >= n || j < 0){
             return Integer.MAX_VALUE;
         }
-        
-        if(n == row-1 && m == col-1){
-            return grid[n][m];
+        if(i == m -1 && j == n-1){
+            return grid[i][j];
         }
-        
-        int val = grid[n][m] + Math.min(minPathSumFunc(grid, n + 1, m, map), minPathSumFunc(grid, n, m + 1, map));
-        map.put(key,val);
+        if(dp[i][j] != -1){
+            return dp[i][j];
+        }
+        int val = grid[i][j] + Math.min(recurse(grid,i+1,j),recurse(grid, i,j+1));
+        dp[i][j] = val;
         return val;
     }
 }
