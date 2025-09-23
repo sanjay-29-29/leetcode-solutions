@@ -5,29 +5,27 @@ class Solution {
 
         int i = 0;
 
-        while(i < v1.length && i < v2.length) {
+        for(i = 0; i < v1.length && i < v2.length; i++) {
             int i1 = Integer.valueOf(v1[i]);
             int i2 = Integer.valueOf(v2[i]);
+
             if(i1 > i2) {
                 return 1;
             }
             else if(i1 < i2) {
-                return -1;
+                return -1; 
             }
-            i++;
-        }
+        } 
 
         while(i < v1.length) {
-            int v = Integer.valueOf(v1[i]);
-            if(v > 0) {
+            if(Integer.valueOf(v1[i]) > 0) {
                 return 1;
             }
             i++;
         }
 
         while(i < v2.length) {
-            int v = Integer.valueOf(v2[i]);
-            if(v > 0) {
+            if(Integer.valueOf(v2[i]) > 0) {
                 return -1;
             }
             i++;
