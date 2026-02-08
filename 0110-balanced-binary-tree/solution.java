@@ -14,24 +14,33 @@
  * }
  */
 class Solution {
-    boolean flag = true;
+    Map<TreeNode, Integer> map = new HashMap<>();
 
-    public boolean isBalanced(TreeNode root) {
-        if(root == null){
-            return true;
-        }
-        if(Math.abs(maxHeight(root.left) - maxHeight(root.right)) > 1){
-            return false;
-        }
-        return isBalanced(root.left) & isBalanced(root.right);
-    }
-
-    private int maxHeight(TreeNode root){
-        if(root == null){
+    public int height(TreeNode root) {
+        if(root == null) {
             return 0;
         }
 
-        return 1 + Math.max(maxHeight(root.left), maxHeight(root.right));
+        if(map.containsKey(root)) {
+            return map.get(root);
+        }
+
+        int h = 1 + Math.max(height(root.left), height(root.right));
+        map.put(root, h);
+        return h;
     }
 
+    public boolean isBalanced(TreeNode root) {
+        if(root == null) {
+            return true;
+        }
+        int h1 = height(root.left);
+        int h2 = height(root.right);
+
+        if(Math.abs(h1 - h2) > 1) {
+            return false;
+        }
+
+        return isBalanced(root.left) && isBalanced(root.right);
+    }
 }
