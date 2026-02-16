@@ -1,17 +1,15 @@
-public class Solution {
-    // you need treat n as an unsigned value
+class Solution {
     public int reverseBits(int n) {
-        int n1 = 0;
+        int res = 0;
 
-        for(int i = 0; i < 31; i++){
-            int left = (n & 1);
-            // System.out.println(left);
-            n1 = n1 | left;
-            n1 = n1 << 1;
-            n = n >> 1;
+        for(int i = 0; i < 32; i++) {
+            int val = (n & 1);
+            n = n >>> 1;
+            val = val << 31 - i;
+            res = res ^ val;
+            // System.out.println(Integer.toBinaryString(res));
         }
 
-
-        return n1 | (n & 1);
+        return res;
     }
 }
