@@ -1,27 +1,19 @@
 class Solution {
-    private void recursion(String str, int n, List<String> res){
-        if(n == 0){
-            res.add(str);
-            return;
-        }
-
-        recursion(str + "0", n - 1, res);
-        recursion(str + "1", n - 1, res);
-    }
-
     public String findDifferentBinaryString(String[] nums) {
-        Set<String> set = new HashSet<>();
+        Set<Integer> set = new HashSet<>();
+        int maxInt = (int) Math.pow(2, nums[0].length());
 
-        for(String s : nums){
-            set.add(s);
+        for(String s : nums) {
+            set.add(Integer.parseInt(s, 2));
         }
 
-        List<String> res = new ArrayList<>();
-        recursion("", nums[0].length(), res);
-
-        for(String s : res){
-            if(!set.contains(s)){
-                return s;
+        for(int i = 0; i < maxInt; i++) {
+            if(!set.contains(i)) {
+                StringBuilder s = new StringBuilder(Integer.toBinaryString(i));
+                while(s.length() != nums[0].length()) {
+                    s.insert(0, '0');
+                }
+                return s.toString();
             }
         }
 
