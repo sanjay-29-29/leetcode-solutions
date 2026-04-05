@@ -1,18 +1,26 @@
 class Solution {
-    public boolean judgeCircle(String s) {
-        int up = 0;
-        int down = 0;
-        int left = 0;
-        int right = 0;
-
-        for(int i = 0 ; i < s.length(); i++){
-            if(s.charAt(i) == 'U') up++;
-            if(s.charAt(i) == 'D') down++;
-            if(s.charAt(i) == 'L') left++;
-            if(s.charAt(i) == 'R') right++;
+    public boolean judgeCircle(String moves) {
+        int x = 0, y = 0;
+        
+        for(int i = 0; i < moves.length(); i++) {
+            if(moves.charAt(i) == 'U') {
+                y++;
+            }
+            else if(moves.charAt(i) == 'D') {
+                y--;
+            }
+            else if(moves.charAt(i) == 'L') {
+                x++;
+            }
+            else {
+                x--;
+            }
         }
 
-        if(left == right && up == down) return true;
+        if(x == 0 && y == 0) {
+            return true;
+        }
+
         return false;
     }
 }
