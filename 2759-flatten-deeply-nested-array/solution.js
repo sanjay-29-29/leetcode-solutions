@@ -3,21 +3,26 @@
  * @param {number} depth
  * @return {Array}
  */
-
 var flat = function (arr, n) {
-    let newArr = [];
+    const res = []
 
-    if (n == 0) {
-        return arr;
-    }
-
-    for (let i = 0; i < arr.length; i++) {
-        if (Array.isArray(arr[i])) {
-            newArr.push(...flat(arr[i], n - 1));
-        } else {
-            newArr.push(arr[i]);
+    function recursiveFlat(arr, curr, n, res) {
+        if(n < curr) {
+            res.push(arr);
+            return;
         }
+        for(const i of arr) {
+            if(Array.isArray(i)) {
+                recursiveFlat(i, curr + 1, n, res);
+            }
+            else {
+                res.push(i);
+            }
+        }
+
+        // return res;
     }
 
-    return newArr;
+    recursiveFlat(arr, 0, n, res);
+    return res;
 };
