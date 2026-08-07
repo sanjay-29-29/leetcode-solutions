@@ -1,25 +1,21 @@
 class EventEmitter {
-    
+    events = {
+
+    } 
+
     /**
      * @param {string} eventName
      * @param {Function} callback
-     * @return {this.object}
+     * @return {Object}
      */
-    obj = {
-
-    }
-
     subscribe(eventName, callback) {
-        if(this.obj[eventName] !== undefined) {
-            this.obj[eventName].add(callback);
-        }else{
-            this.obj[eventName] = new Set();
-            this.obj[eventName].add(callback);
-        }
+        const e = this.events[eventName] ?? new Set()
+        e.add(callback)
+        this.events[eventName] = e
 
         return {
             unsubscribe: () => {
-                this.obj[eventName].delete(callback);
+                e.delete(callback)
             }
         };
     }
@@ -30,15 +26,14 @@ class EventEmitter {
      * @return {Array}
      */
     emit(eventName, args = []) {
+        const e = this.events[eventName] ?? new Set()
         const res = []
-        const set = this.obj[eventName]
-        if(set !== undefined) {
-            for(var fun of set) {
-                res.push(fun(...args));
-            }
+
+        for(const func of e) {
+            res.push(func(...args))
         }
 
-        return res;
+        return res
     }
 }
 
